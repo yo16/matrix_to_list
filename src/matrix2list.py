@@ -37,7 +37,7 @@ def matrix2list(input_file_path, output_file_path, delimiter=',', skip_null_rec=
         # lineterminator	writerを使用する際に、各行の終端を表すのに使用する文字。readerでは、'\r' または '\n' を終端とするようにハードコードされているので関係ない。	'\r\n'
         # quotechar	delimiter や quotechar といった特殊文字を含むか、改行文字を含むフィールドをクオートする際に用いられる 1 文字からなる文字	'"'
         # skipinitialspace	True の場合、 delimiter の直後に続く空白は無視されます。	False
-        reader = csv.reader(f, delimiter=',', doublequote=True, lineterminator='\r\n', quotechar='"', skipinitialspace=True)
+        reader = csv.reader(f, delimiter=delimiter, doublequote=True, lineterminator='\r\n', quotechar='"', skipinitialspace=True)
         csv_data = [row for row in reader]
     # print(csv_data)
 
@@ -57,6 +57,10 @@ def matrix2list(input_file_path, output_file_path, delimiter=',', skip_null_rec=
     for rec in csv_data[1:]:
         col1 = rec[0]
         for i, val in enumerate(rec[1:]):
+            # 空のセルだったらスキップ
+            if skip_null_rec and val == null_str:
+                continue
+
             csv_data_out.append([
                 col1,
                 column2[i%len_column2],
@@ -66,7 +70,7 @@ def matrix2list(input_file_path, output_file_path, delimiter=',', skip_null_rec=
 
     # 保存
     with open(output_file_path, 'w') as f:
-        writer = csv.writer(f, lineterminator='\n')    # オプションは必要だったらそのうち実装する
+        writer = csv.writer(f, delimiter=delimiter, lineterminator='\n')    # 他のオプションは必要だったらそのうち実装する
         writer.writerows(csv_data_out)
     
     return None
