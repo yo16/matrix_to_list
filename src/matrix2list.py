@@ -32,12 +32,16 @@ def matrix2list(input_file_path, output_file_path, delimiter=',', skip_null_rec=
         出力ファイルのエンコーディング
     vertical_column_name_index: int
         列名で使用する列
+        ここで指示された列を下方向に読んで使用する.
     vertical_column_ignore_tail: int
-        最終列で無視する列数
+        最終行から無視する行数
+        一番下に合計行があることを想定している.
     horizonal_column_name_index: int
         列名で使用する行
+        ここで指示された行を右方向に読んで使用する.
     horizonal_column_ignore_tail: int
-        最終列で無視する行数
+        最終列から無視する列数
+        一番右に合計列があることを想定している.
     data_start_line: int
         データが始まる行番号
     data_start_column: int
@@ -62,12 +66,12 @@ def matrix2list(input_file_path, output_file_path, delimiter=',', skip_null_rec=
     # print(csv_data)
 
     # 列名を取得
-    # 縦
+    # 下方向に列名を読む. 最終行の無視が指示されている場合は無視する
     column1_tail = None
     if vertical_column_ignore_tail>0:
         column1_tail = (-1)*vertical_column_ignore_tail
     column1 = [ rec[vertical_column_name_index] for rec in csv_data[data_start_column:column1_tail] ]
-    # 横
+    # 横方向に列名を読む. 最終列(右端)の無視が指示されている場合は無視する
     column2_tail = None
     if horizonal_column_ignore_tail>0:
         column2_tail = (-1)*horizonal_column_ignore_tail
@@ -114,6 +118,6 @@ if __name__=="__main__":
         vertical_column_name_index=1, vertical_column_ignore_tail=1,
         horizonal_column_name_index=1, horizonal_column_ignore_tail=2,
         data_start_column=3)
-
+    
     print('finished!')
 
